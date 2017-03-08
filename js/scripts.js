@@ -11,19 +11,26 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
 
 
 
-//set up marker characteristics
-var geojsonMarkerOptions = {
-    radius: 8,
-    fillColor: "deepskyblue",
-    color: "cyan",
-    weight: 1,
-    opacity: .2,
-    fillOpacity: 0.8
-};
 
 //create circleMarkers for stations with popup content
 L.geoJson(stations, {
     pointToLayer: function (feature, latlng) {
+
+      function getRadius(feature) {
+        if (feature.totalDocks > 20) return 15;
+        if (feature.totalDocks > 10) return 10;
+        if (feature.totalDocks > 0) return 5;
+      }
+
+      var geojsonMarkerOptions = {
+        radius: getRadius(feature),
+        fillColor: "deepskyblue",
+        color: "cyan",
+        weight: 1,
+        opacity: .2,
+        fillOpacity: 0.8
+      };
+
       return L.circleMarker(latlng, geojsonMarkerOptions);
     },
 }).bindPopup(function (layer) {
