@@ -1,6 +1,6 @@
 
 //instantiate map into container with set view
-var map = L.map('mapcontainer').setView([39.9526, -75.1652], 12);
+var map = L.map('mapcontainer').setView([39.9996, -75.1252], 11);
 //add carto light basemap
 //var layer =  
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
@@ -9,33 +9,67 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
       }).addTo(map);
 
 
+var tractStyle = {
+    "color": "#ff7800",
+    "weight": 1,
+    "opacity": 0.65
+  };
 
+var tractMarkers = L.geoJson(tracts, {
+  style: tractStyle
+}).addTo(map);
 
+var laneStyle = {
+    "color": "blue",
+    "weight": 2,
+};
+
+var laneMarkers = L.geoJson(lanes, {
+  style: laneStyle
+}).addTo(map);
 
 //create circleMarkers for stations with popup content
-L.geoJson(stations, {
+var stationMarkers = L.geoJson(stations, {
     pointToLayer: function (feature, latlng) {
 
+
+    //create dynamic circle marker radius based on the number of docks at a station
       function getRadius(feature) {
-        if (feature.totalDocks > 20) return 15;
-        if (feature.totalDocks > 10) return 10;
-        if (feature.totalDocks > 0) return 5;
+        if (feature.properties.totalDocks > 20) return 10;
+        if (feature.properties.totalDocks > 15) return 7.5;
+        if (feature.properties.totalDocks > 10) return 5;
+        if (feature.properties.totalDocks > 5) return 2.5;
+        if (feature.properties.totalDocks > 0) return 1;
       }
 
       var geojsonMarkerOptions = {
         radius: getRadius(feature),
+        //radius: 10,
         fillColor: "deepskyblue",
-        color: "cyan",
-        weight: 1,
-        opacity: .2,
+        color: "gray",
+        weight: 2,
+        opacity: .05,
         fillOpacity: 0.8
       };
 
       return L.circleMarker(latlng, geojsonMarkerOptions);
-    },
+    }
 }).bindPopup(function (layer) {
     return (' Total number of docks in kiosk: ' + layer.feature.properties.totalDocks +
      		' Docks currently available: ' + layer.feature.properties.docksAvailable + 
      		' Bikes currently available: ' + layer.feature.properties.bikesAvailable);  
 }).addTo(map);
 
+
+
+
+
+//$('.btn-stations').on('click', function() {
+//  $("stationMarkers").toggle();
+//});
+
+//This toggles the header on and off when the "bikeshare stations" button is clicked.
+//Need to replicate this but to toggle the circlemarkers for stations.
+//$('.btn-stations').on('click', function() {
+   // $("h1").toggle();
+//});
