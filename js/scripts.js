@@ -29,6 +29,7 @@ var laneMarkers = L.geoJson(lanes, {
 }).addTo(map);
 
 //create circleMarkers for stations with popup content
+
 var stationMarkers = L.geoJson(stations, {
     pointToLayer: function (feature, latlng) {
 
@@ -61,15 +62,3 @@ var stationMarkers = L.geoJson(stations, {
 }).addTo(map);
 
 
-
-
-
-//$('.btn-stations').on('click', function() {
-//  $("stationMarkers").toggle();
-//});
-
-//This toggles the header on and off when the "bikeshare stations" button is clicked.
-//Need to replicate this but to toggle the circlemarkers for stations.
-//$('.btn-stations').on('click', function() {
-   // $("h1").toggle();
-//});
